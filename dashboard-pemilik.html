@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Pemilik - KosFinder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold text-blue-600">KosFinder</a>
+      <div>
+        <a href="index.html" class="text-gray-700 hover:text-blue-600 mr-6">Beranda</a>
+        <a href="dashboard-pemilik.html" class="text-blue-600 font-semibold">Dashboard</a>
+        <a href="login.html" class="text-gray-700 hover:text-blue-600 ml-6">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Dashboard Pemilik Kos</h1>
+      <a href="tambah-kos.html" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+        + Tambah Kos Baru
+      </a>
+    </div>
+
+    <section>
+      <h2 class="text-xl font-semibold text-gray-700 mb-4">Daftar Kos Anda</h2>
+
+      <div id="daftarKos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Data kos akan ditampilkan di sini secara dinamis -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6 mt-12 text-center">
+    &copy; 2025 KosFinder. All rights reserved.
+  </footer>
+
+  <!-- Script Dinamis -->
+  <script>
+    const daftarKos = JSON.parse(localStorage.getItem("daftarKos")) || [];
+    const container = document.getElementById("daftarKos");
+
+    if (daftarKos.length === 0) {
+      container.innerHTML = `<p class="text-gray-600 col-span-full">Belum ada kos ditambahkan.</p>`;
+    } else {
+      daftarKos.forEach((kos, index) => {
+        const card = document.createElement("div");
+        card.className = "bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow";
+
+        card.innerHTML = `
+          <img src="${kos.gambar}" alt="${kos.nama}" class="w-full h-48 object-cover" loading="lazy" />
+          <div class="p-4">
+            <h3 class="font-bold text-xl mb-1">${kos.nama}</h3>
+            <p class="text-gray-600 mb-1">📍 ${kos.lokasi}</p>
+            <p class="text-gray-600 mb-3">💰 Rp ${kos.harga}/bulan</p>
+            <div class="flex space-x-2">
+              <a href="edit-kos.html?id=${index}" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Edit</a>
+              <button onclick="hapusKos(${index})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Hapus</button>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function hapusKos(index) {
+      if (confirm("Yakin ingin menghapus kos ini?")) {
+        daftarKos.splice(index, 1);
+        localStorage.setItem("daftarKos", JSON.stringify(daftarKos));
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>
